@@ -104,7 +104,7 @@
 	</repositories>
 
 	<scm>
-		<connection>scm:git:ssh://github.com/Praqma/MonKit.git</connection>
+		<connection>scm:git:http://github.com/Praqma/MonKit.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/Praqma/MonKit.git</developerConnection>
 		<url>https://github.com/Praqma/MonKit.git</url>
 	</scm>
