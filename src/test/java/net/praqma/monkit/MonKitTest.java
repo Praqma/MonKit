@@ -54,6 +54,10 @@ public class MonKitTest {
 	
 	MonKit mk = MonKit.merge(mk1,mk2, mk3);
 	
+	for( MonKitCategory mkc : mk.getCategories() ) {
+	    System.out.println(mkc.toString() );
+	}
+	
 	System.out.println( mk );
     }
     

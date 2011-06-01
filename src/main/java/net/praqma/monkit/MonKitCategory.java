@@ -34,4 +34,14 @@ public class MonKitCategory extends ArrayList<MonKitObservation> {
     public String getScale() {
 	return scale;
     }
+    
+    public String toString() {
+	StringBuffer s = new StringBuffer();
+	s.append( name + ": \n" );
+	for( MonKitObservation mke : this ) {
+	    s.append(mke.toString() +"\n");
+	}
+	
+	return s.toString();
+    }
 }
