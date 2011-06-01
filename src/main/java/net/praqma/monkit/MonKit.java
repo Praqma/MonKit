@@ -119,10 +119,11 @@ public class MonKit {
      * @param value Value of the observation
      * @throws MonKitException
      */
-    public void add(String name, String scale, String value) throws MonKitException {
+    public void add(String name, String scale, String value, String category) {
 	Element o = doc.createElement("observation");
 	o.setAttribute("name", name);
 	o.setAttribute("scale", scale);
+	o.setAttribute("category", category);
 	o.setTextContent(value);
 	root.appendChild(o);
     }
@@ -135,6 +136,7 @@ public class MonKit {
 	Element o = doc.createElement("observation");
 	o.setAttribute("name", mke.getName());
 	o.setAttribute("scale", mke.getScale());
+	o.setAttribute("category", mke.getCategory());
 	o.setTextContent(mke.getValue());
 	root.appendChild(o);
     }
@@ -162,7 +164,7 @@ public class MonKit {
 	    Node node = nodes.item(i);
 	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
 		Element e = (Element)node;
-		elements.add( new MonKitObservation(e.getAttribute("name"), e.getAttribute("scale"), e.getTextContent()) );
+		elements.add( new MonKitObservation(e.getAttribute("name"), e.getAttribute("scale"), e.getTextContent(), e.getAttribute("category")) );
 	    }
 	}
 	

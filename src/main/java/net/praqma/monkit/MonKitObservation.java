@@ -10,10 +10,13 @@ public class MonKitObservation {
     private String value;
     private String scale;
     
-    public MonKitObservation( String name, String scale, String value ) {
+    private String category;
+    
+    public MonKitObservation( String name, String scale, String value, String category ) {
 	this.setName(name);
 	this.setScale(scale);
 	this.setValue(value);
+	this.setCategory(category);
     }
 
     public void setName(String name) {
@@ -40,6 +43,14 @@ public class MonKitObservation {
 	return scale;
     }
     
+    public void setCategory(String category) {
+	this.category = category;
+    }
+
+    public String getCategory() {
+	return category;
+    }
+
     public String toString() {
 	return "Name: " + name + ", scale: " + scale + ", value: " + value;
     }
