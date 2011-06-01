@@ -28,6 +28,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class MonKit {
+    
+    public static final String __ROOT_TAG = "categories";
+    
     private File destination = null;
     
     private Element root = null;
@@ -50,7 +53,7 @@ public class MonKit {
 	    throw new MonKitException( "Empty MonKit file" );
 	}
 	
-	if( !node.getNodeName().equals("observations") ) {
+	if( !node.getNodeName().equals(MonKit.__ROOT_TAG) ) {
 	    throw new MonKitException( "Not a valid MonKit format" );
 	}
 	
@@ -69,7 +72,7 @@ public class MonKit {
 	}
 
 	/* Preparing the root note */
-	root = (Element) doc.appendChild(doc.createElement("observations"));
+	root = (Element) doc.appendChild(doc.createElement(MonKit.__ROOT_TAG));
     }
     
     /**
@@ -112,6 +115,17 @@ public class MonKit {
 	return new MonKit( doc );
     }
     
+    public void addCategory( String name, String scale ) {
+	if( getCategory(name) != null ) {
+	    return;
+	}
+	
+	Element o = doc.createElement("category");
+	o.setAttribute("name", name);
+	o.setAttribute("scale", scale);
+	root.appendChild(o);
+    }
+    
     /**
      * Add an observation given the three arguments
      * @param name Name of the observation
@@ -119,44 +133,104 @@ public class MonKit {
      * @param value Value of the observation
      * @throws MonKitException
      */
-    public void add(String name, String scale, String value, String category) {
-	Element o = doc.createElement("observation");
-	o.setAttribute("name", name);
-	o.setAttribute("scale", scale);
-	o.setAttribute("category", category);
-	o.setTextContent(value);
-	root.appendChild(o);
+    public void add(String name, String value, String category) {
+	_add(name, value, category);
     }
     
     /**
      * Add an observation given a {@link MonKitObservation}
      * @param mke A MonKitElement
      */
-    public void add( MonKitObservation mke ) {
-	Element o = doc.createElement("observation");
-	o.setAttribute("name", mke.getName());
-	o.setAttribute("scale", mke.getScale());
-	o.setAttribute("category", mke.getCategory());
-	o.setTextContent(mke.getValue());
-	root.appendChild(o);
+    public void add( MonKitObservation mke, String category ) {
+	_add(mke.getName(), mke.getValue(), category);
+    }
+    
+    private void _add(String name, String value, String category) {
+	Element c = getCategory(category);
+	if( c == null ) {
+	    return;
+	}
+	
+	Element e = getObservation( name, category );
+	
+	if( e != null ) {
+	    System.out.println( "YAY\n" );
+	    e.setTextContent(value);
+	    e.setAttribute("name", name);
+	} else {
+	    Element o = doc.createElement("observation");
+	    o.setAttribute("name", name);
+	    o.setTextContent(value);
+	    c.appendChild(o);
+	}
+    }
+    
+    public void add( List<MonKitCategory> elements ) {
+	for( MonKitCategory mkc : elements ) {
+	    add(mkc);
+	}
+    }
+    
+    public void add( MonKitCategory mkc ) {
+	addCategory(mkc.getName(), mkc.getScale());
+	add( mkc, mkc.getName() );
     }
     
     /**
      * Add a series of observations
      * @param elements A list of {@link MonKitObservation}s
      */
-    public void add( List<MonKitObservation> elements ) {
+    public void add( List<MonKitObservation> elements, String category ) {
 	for( MonKitObservation mke : elements ) {
-	    add(mke);
+	    add(mke, category);
 	}
+    }
+    
+    public List<MonKitCategory> getCategories() {
+	NodeList nodes = root.getElementsByTagName("category");
+	
+	List<MonKitCategory> elements = new ArrayList<MonKitCategory>();
+	
+	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
+	    Node node = nodes.item(i);
+	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
+		Element e = (Element)node;
+		String name = e.getAttribute("name");
+		String scale = e.getAttribute("scale");
+		elements.add( new MonKitCategory(name, scale,getObservations(name)) );
+	    }
+	}
+	
+	return elements;
+    }
+    
+    private Element getCategory( String name ) {
+	NodeList nodes = root.getElementsByTagName("category");
+	
+	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
+	    Node node = nodes.item(i);
+	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
+		Element e = (Element)node;
+		if( e.getAttribute("name").equalsIgnoreCase(name) ) {
+		    return e;
+		}
+	    }
+	}
+	
+	return null;
     }
     
     /**
      * Retrieve the observations
      * @return A list of {@link MonKitObservation}s
      */
-    public List<MonKitObservation> getObservations() {
-	NodeList nodes = root.getElementsByTagName("observation");
+    public List<MonKitObservation> getObservations( String name ) {
+	Element category = getCategory(name);
+	if( category == null ) {
+	    return null;
+	}
+	
+	NodeList nodes = category.getElementsByTagName("observation");
 	
 	List<MonKitObservation> elements = new ArrayList<MonKitObservation>();
 	
@@ -164,13 +238,36 @@ public class MonKit {
 	    Node node = nodes.item(i);
 	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
 		Element e = (Element)node;
-		elements.add( new MonKitObservation(e.getAttribute("name"), e.getAttribute("scale"), e.getTextContent(), e.getAttribute("category")) );
+		elements.add( new MonKitObservation(e.getAttribute("name"), e.getTextContent()) );
 	    }
 	}
 	
 	return elements;
     }
    
+    private Element getObservation( String name, String category ) {
+	Element c = getCategory(category);
+	if( c == null ) {
+	    return null;
+	}
+	
+	NodeList nodes = c.getElementsByTagName("observation");
+	System.out.println("i="+nodes.getLength());
+	
+	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
+	    Node node = nodes.item(i);
+	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
+		Element e = (Element)node;
+		System.out.println( "YAY:" + e.getAttribute("name") + " - " + name + "\n" );
+		if( e.getAttribute("name").equalsIgnoreCase(name) ) {
+		    return e;
+		}
+	    }
+	}
+	
+	return null;
+    }
+    
     /**
      * Merge two or more {@link MonKit}s 
      * @param mks An array of MonKits
@@ -179,7 +276,7 @@ public class MonKit {
     public static MonKit merge( MonKit ... mks ) {
 	MonKit nmk = new MonKit();
 	for( MonKit mk : mks ) {
-	    nmk.add( mk.getObservations() );
+	    nmk.add(mk.getCategories());
 	}
 	
 	return nmk;
@@ -193,7 +290,7 @@ public class MonKit {
     public static MonKit merge( List<MonKit> mks ) {
 	MonKit nmk = new MonKit();
 	for( MonKit mk : mks ) {
-	    nmk.add( mk.getObservations() );
+	    nmk.add(mk.getCategories());
 	}
 	
 	return nmk;
@@ -231,16 +328,9 @@ public class MonKit {
 	return getXML();
     }
     
-    public List<MonKitObservation> toList() {
-	return getObservations();
+    public List<MonKitObservation> toList( String name ) {
+	return getObservations(name);
     }
-    
-    /*
-    public Map<MonKitObservation> toMap() {
-	Map<MonKitObservation> map = new HashMap<MonKitObservation>();
-	
-	return map;
-    }*/
     
     public void save() throws IOException {
 	save( destination );
