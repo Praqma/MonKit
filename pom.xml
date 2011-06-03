@@ -5,16 +5,13 @@
 	<version>0.1.6-SNAPSHOT</version>
 	<name>MonKit</name>
 	<url>http://maven.apache.org</url>
-	
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<distributionManagement>
 		<repository>
 			<id>praqma</id>
 			<name>praqma</name>
-			<url>file://\\wolfie\repo\maven</url>
+			<!-- <url>http://code.praqma.net/repo/maven</url> -->
+			<url>file://///wolfie/repo/maven/</url>
 		</repository>
 	</distributionManagement>
 
