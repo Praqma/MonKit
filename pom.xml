@@ -10,7 +10,7 @@
 		<repository>
 			<id>praqma</id>
 			<name>praqma</name>
-			<url>file://\\wolfie\repo\maven</url>
+			<url>http://code.praqma.net/repo/maven/</url>
 		</repository>
 	</distributionManagement>
 
