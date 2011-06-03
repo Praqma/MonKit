@@ -7,6 +7,14 @@
   <name>MonKit</name>
   <url>http://maven.apache.org</url>
   
+  <distributionManagement>
+    <repository>
+      <id>praqma</id>
+      <name>praqma</name>
+      <url>file://\\wolfie\repo\maven</url>
+    </repository>
+  </distributionManagement>
+  
   <build>
 	  <directory>${project.basedir}/build</directory>
 	  <outputDirectory>${project.build.directory}/classes</outputDirectory>
@@ -36,5 +44,11 @@
 	<repositories> 
 
 	</repositories>
+	
+		<scm>
+		<connection>scm:git:ssh://github.com/Praqma/Matrix-Reloaded-Plugin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/Praqma/MonKit.git</developerConnection>
+		<url>https://github.com/Praqma/MonKit.git</url>
+	</scm>
   
 </project>
