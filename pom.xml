@@ -1,53 +1,61 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.praqma</groupId>
-  <artifactId>monkit</artifactId>
-  <version>0.1.4</version>
-  <name>MonKit</name>
-  <url>http://maven.apache.org</url>
-  
-  <distributionManagement>
-    <repository>
-      <id>praqma</id>
-      <name>praqma</name>
-      <url>file://\\wolfie\repo\maven</url>
-    </repository>
-  </distributionManagement>
-  
-  <build>
-	  <directory>${project.basedir}/build</directory>
-	  <outputDirectory>${project.build.directory}/classes</outputDirectory>
-	  <finalName>${project.artifactId}</finalName>
-	  
-    <plugins>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.praqma</groupId>
+	<artifactId>monkit</artifactId>
+	<version>0.1.5-SNAPSHOT</version>
+	<name>MonKit</name>
+	<url>http://maven.apache.org</url>
 
-    </plugins>
-    
+	<distributionManagement>
+		<repository>
+			<id>praqma</id>
+			<name>praqma</name>
+			<url>file://\\wolfie\repo\maven</url>
+		</repository>
+	</distributionManagement>
+
+	<build>
+		<directory>${project.basedir}/build</directory>
+		<outputDirectory>${project.build.directory}/classes</outputDirectory>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+
 	</build>
-	
-	
-  <reporting>
-    <plugins>
-    </plugins>
-  </reporting>
 
-  <dependencies>
+
+	<reporting>
+		<plugins>
+		</plugins>
+	</reporting>
+
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 			<scope>test</scope>
 		</dependency>
- 	</dependencies>
-  
-	<repositories> 
+	</dependencies>
+
+	<repositories>
 
 	</repositories>
-	
-		<scm>
+
+	<scm>
 		<connection>scm:git:ssh://github.com/Praqma/Matrix-Reloaded-Plugin.git</connection>
 		<developerConnection>scm:git:ssh://git@github.com/Praqma/MonKit.git</developerConnection>
 		<url>https://github.com/Praqma/MonKit.git</url>
 	</scm>
-  
+
 </project>

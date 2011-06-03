@@ -7,9 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -154,7 +152,6 @@ public class MonKit {
 	Element e = getObservation( name, category );
 	
 	if( e != null ) {
-	    System.out.println( "YAY\n" );
 	    e.setTextContent(value);
 	    e.setAttribute("name", name);
 	} else {
@@ -252,13 +249,11 @@ public class MonKit {
 	}
 	
 	NodeList nodes = c.getElementsByTagName("observation");
-	System.out.println("i="+nodes.getLength());
 	
 	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
 	    Node node = nodes.item(i);
 	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
 		Element e = (Element)node;
-		System.out.println( "YAY:" + e.getAttribute("name") + " - " + name + "\n" );
 		if( e.getAttribute("name").equalsIgnoreCase(name) ) {
 		    return e;
 		}
