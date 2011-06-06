@@ -34,15 +34,27 @@ public class MonKit {
     private Element root = null;
     private Document doc = null;
     
+    /**
+     * Constructor initializing an empty MonKit
+     */
     public MonKit( ) {
 	destination = new File( "monkit.xml" );
 	initialize();
     }
     
+    /**
+     * Constructor initializing an empty MonKit with a predefined output destination
+     * @param destination A File representing the output file
+     */
     public MonKit( File destination ) {
 	initialize();
     }
     
+    /**
+     * Constructor initializing a MonKit given a Document
+     * @param doc A valid MonKit Document
+     * @throws MonKitException
+     */
     public MonKit( Document doc ) throws MonKitException {
 	this.doc = doc;
 	Node node = doc.getFirstChild();
@@ -96,6 +108,12 @@ public class MonKit {
 	return new MonKit( doc );
     }
     
+    /**
+     * Given a String, a MonKit is initialized
+     * @param str A valid MonKit
+     * @return A MonKit
+     * @throws MonKitException
+     */
     public static MonKit fromString( String str ) throws MonKitException {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	factory.setNamespaceAware( true );
@@ -113,6 +131,11 @@ public class MonKit {
 	return new MonKit( doc );
     }
     
+    /**
+     * Add a category to the MonKit
+     * @param name The name of the category
+     * @param scale The scale of the category
+     */
     public void addCategory( String name, String scale ) {
 	if( getCategory(name) != null ) {
 	    return;
@@ -162,12 +185,20 @@ public class MonKit {
 	}
     }
     
-    public void add( List<MonKitCategory> elements ) {
-	for( MonKitCategory mkc : elements ) {
+    /**
+     * Add a List of categories to the MonKit
+     * @param categories The list of MonKitCategories
+     */
+    public void add( List<MonKitCategory> categories ) {
+	for( MonKitCategory mkc : categories ) {
 	    add(mkc);
 	}
     }
     
+    /**
+     * Add another MonKitCategory to the MonKit
+     * @param mkc
+     */
     public void add( MonKitCategory mkc ) {
 	addCategory(mkc.getName(), mkc.getScale());
 	add( mkc, mkc.getName() );
@@ -183,6 +214,10 @@ public class MonKit {
 	}
     }
     
+    /**
+     * Get a List of the available categories
+     * @return
+     */
     public List<MonKitCategory> getCategories() {
 	NodeList nodes = root.getElementsByTagName("category");
 	
@@ -327,10 +362,19 @@ public class MonKit {
 	return getObservations(name);
     }
     
+    /**
+     * Save the MonKit
+     * @throws IOException
+     */
     public void save() throws IOException {
 	save( destination );
     }
     
+    /**
+     * Save the MonKit to a given destination
+     * @param filename
+     * @throws IOException
+     */
     public void save(File filename) throws IOException {
 	String xml = getXML();
 	try {
