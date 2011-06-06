@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.praqma</groupId>
 	<artifactId>monkit</artifactId>
-	<version>0.1.6-SNAPSHOT</version>
+	<version>0.1.7-SNAPSHOT</version>
 	<name>MonKit</name>
 	<url>http://maven.apache.org</url>
 
@@ -10,8 +10,7 @@
 		<repository>
 			<id>praqma</id>
 			<name>praqma</name>
-			<!-- <url>http://code.praqma.net/repo/maven</url> -->
-			<url>wolfie.praqma.local/repo/maven/</url>
+			<url>scp://10.10.1.25:/var/www/repo/maven</url>
 		</repository>
 	</distributionManagement>
 
