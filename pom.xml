@@ -10,7 +10,7 @@
 		<repository>
 			<id>praqma</id>
 			<name>praqma</name>
-			<url>file://code.praqma.net/repo/maven</url>
+			<url>scp://code.praqma.net/repo/maven</url>
 			<!--<url>smb://wolfie/repo/maven</url> -->
 		</repository>
 	</distributionManagement>
