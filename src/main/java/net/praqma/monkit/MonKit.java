@@ -91,10 +91,7 @@ public class MonKit {
 
 	/* Preparing the root note */
 	root = (Element) doc.appendChild(doc.createElement(MonKit.__ROOT_TAG));
-	
-	
-	doc.getDocumentElement().setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", __SCHEMA);
-	//doc.getDocumentElement().setAttribute("xsi:schemaLocation", __SCHEMA);
+	root.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", __SCHEMA);
     }
     
     /**
@@ -114,7 +111,7 @@ public class MonKit {
 
 	    doc = builder.parse(xml);
 	} catch (Exception e) {
-	    throw new MonKitException( "Coult not parse the file" );
+	    throw new MonKitException( "Could not parse the file" );
 	}
 	
 	return new MonKit( doc );
@@ -400,6 +397,10 @@ public class MonKit {
 	return null;
     }
     
+    /**
+     * Validate the MonKit xml file
+     * @return True or false whether the xml is valid or not
+     */
     public boolean validate() {
 	SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 	try {
