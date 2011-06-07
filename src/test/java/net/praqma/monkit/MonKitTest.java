@@ -11,7 +11,9 @@ public class MonKitTest {
     public void testMonKit() {
 	MonKit mk = new MonKit();
 	mk.addCategory("category", "scale");
-	mk.add("name", "value", "category");
+	mk.add("name", "1", "category");
+		
+	assertTrue(mk.validate());
 	
 	System.out.println( mk );
     }
@@ -23,9 +25,11 @@ public class MonKitTest {
 	mk.addCategory("category", "scale");
 	mk.addCategory("category3", "scale3");
 	
-	mk.add("name1", "value1", "category");
-	mk.add("name2", "value2", "category");
-	mk.add("name3", "value", "category3");
+	mk.add("name1", "2", "category");
+	mk.add("name2", "3", "category");
+	mk.add("name3", "4", "category3");
+	
+	assertTrue(mk.validate());
 	
 	System.out.println( mk );
     }
@@ -38,8 +42,10 @@ public class MonKitTest {
 	mk.addCategory("category", "scale");
 	mk.addCategory("category2", "scale2");
 	
-	mk.add( new MonKitObservation("name1", "value1"), "category" );
-	mk.add( new MonKitObservation("name1", "value1"), "category" );
+	mk.add( new MonKitObservation("name1", "5"), "category" );
+	mk.add( new MonKitObservation("name1", "6"), "category" );
+	
+	assertTrue(mk.validate());
 	
 	System.out.println( mk );
     }
@@ -48,17 +54,19 @@ public class MonKitTest {
     public void testMonKit4() throws MonKitException {
 	System.out.println( "test 41\n" );
 	
-	MonKit mk1 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">value1</observation><observation name=\"name2\">value2</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
-	MonKit mk2 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">value3</observation><observation name=\"name4\">value1</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
-	MonKit mk3 = MonKit.fromString("<categories><category name=\"category2\" scale=\"scale\"><observation name=\"name44\">value1412</observation><observation name=\"name22222\">valu123123e13</observation></category></categories>" );
+	MonKit mk1 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">7</observation><observation name=\"name2\">10</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
+	MonKit mk2 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">8</observation><observation name=\"name4\">11</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
+	MonKit mk3 = MonKit.fromString("<categories><category name=\"category2\" scale=\"scale\"><observation name=\"name44\">9</observation><observation name=\"name22222\">12</observation></category></categories>" );
 	
 	MonKit mk = MonKit.merge(mk1,mk2, mk3);
 	
 	for( MonKitCategory mkc : mk.getCategories() ) {
 	    System.out.println(mkc.toString() );
 	}
-	
 	System.out.println( mk );
+	assertTrue(mk.validate());
+	
+	
     }
     
 }

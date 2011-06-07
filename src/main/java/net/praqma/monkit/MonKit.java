@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +21,20 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class MonKit {
     
     public static final String __ROOT_TAG = "categories";
+    public static final String __SCHEMA = "http://code.praqma.net/schemas/monkit/1.0.1/monkit.xsd";
     
     private File destination = null;
     
@@ -73,6 +80,7 @@ public class MonKit {
     private void initialize() {
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	factory.setNamespaceAware(true);
+	factory.setSchema(MonKit.getSchema());
 	DocumentBuilder builder;
 	try {
 	    builder = factory.newDocumentBuilder();
@@ -83,6 +91,7 @@ public class MonKit {
 
 	/* Preparing the root note */
 	root = (Element) doc.appendChild(doc.createElement(MonKit.__ROOT_TAG));
+	root.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", __SCHEMA);
     }
     
     /**
@@ -102,7 +111,7 @@ public class MonKit {
 
 	    doc = builder.parse(xml);
 	} catch (Exception e) {
-	    throw new MonKitException( "Coult not parse the file" );
+	    throw new MonKitException( "Could not parse the file" );
 	}
 	
 	return new MonKit( doc );
@@ -141,10 +150,11 @@ public class MonKit {
 	    return;
 	}
 	
-	Element o = doc.createElement("category");
-	o.setAttribute("name", name);
-	o.setAttribute("scale", scale);
-	root.appendChild(o);
+	Element c = doc.createElement("category");
+	c.setAttribute("name", name);
+	c.setAttribute("scale", scale);
+	c.appendChild(doc.createElement("observations"));
+	root.appendChild(c);
     }
     
     /**
@@ -181,7 +191,10 @@ public class MonKit {
 	    Element o = doc.createElement("observation");
 	    o.setAttribute("name", name);
 	    o.setTextContent(value);
-	    c.appendChild(o);
+	    Element obs = (Element) c.getElementsByTagName("observations").item(0);
+	    if( obs != null ) {
+		obs.appendChild(o);
+	    }
 	}
     }
     
@@ -252,6 +265,19 @@ public class MonKit {
 	return null;
     }
     
+    private Element getObservationsElement( Element category ) {
+	NodeList nodes = category.getElementsByTagName("observations");
+	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
+	    
+	    Node node = nodes.item(i);
+	    if( node.getNodeType( ) == Node.ELEMENT_NODE ) {
+		return (Element)node;
+	    }
+	}
+	
+	return null;
+    }
+    
     /**
      * Retrieve the observations
      * @return A list of {@link MonKitObservation}s
@@ -283,7 +309,8 @@ public class MonKit {
 	    return null;
 	}
 	
-	NodeList nodes = c.getElementsByTagName("observation");
+	Element obs = (Element) c.getElementsByTagName("observations").item(0);
+	NodeList nodes = obs.getElementsByTagName("observation");
 	
 	for( int i = 0, len = nodes.getLength() ; i < len ; ++i ) {
 	    Node node = nodes.item(i);
@@ -332,7 +359,7 @@ public class MonKit {
      */
     public String getXML() {
 	StringWriter out = new StringWriter();
-
+	
 	try {
 	    TransformerFactory factory = TransformerFactory.newInstance();
 
@@ -356,6 +383,42 @@ public class MonKit {
     
     public String toString() {
 	return getXML();
+    }
+    
+    public static Schema getSchema() {
+	SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+	try {
+	    return schemaFactory.newSchema(new URL( "http://code.praqma.net/schemas/monkit/1.0.0/monkit.xsd" ));
+	}
+	catch( Exception e ) {
+	    e.printStackTrace();
+	}
+	
+	return null;
+    }
+    
+    /**
+     * Validate the MonKit xml file
+     * @return True or false whether the xml is valid or not
+     */
+    public boolean validate() {
+	SchemaFactory schemaFactory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
+	try {
+	    Schema schema = schemaFactory.newSchema(new URL( __SCHEMA ));
+	    Validator validator = schema.newValidator();
+	    
+	    validator.validate(new DOMSource(doc));
+	    return true;
+	    
+	} catch (MalformedURLException e) {
+	    System.err.println( "Whoops... Not good: " + e );
+	} catch (SAXException e) {
+	    System.err.println( "Not valid: " + e );
+	} catch (IOException e) {
+	    System.err.println( "Whoops... Not good: " + e );
+	}
+
+	return false;
     }
     
     public List<MonKitObservation> toList( String name ) {
