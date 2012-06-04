@@ -497,4 +497,20 @@ public class MonKit {
     public File getDestination() {
         return destination;
     }
+    
+    /**
+     * Implemented this method because we could end up in non-failed builds with no data, which leads to graphs not being rendered.
+     * @return 
+     */
+    public boolean isAllCategoriesEmpty() {
+        boolean allEmpty = true;
+        for(MonKitCategory mkc : getCategories()) {
+            if(mkc.isEmpty()) {
+                continue;
+            } else {
+                allEmpty = false;
+            }
+        }
+        return allEmpty;
+    }
 }
