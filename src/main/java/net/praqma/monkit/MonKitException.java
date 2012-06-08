@@ -4,10 +4,10 @@ public class MonKitException extends Exception {
     private static final long serialVersionUID = -8031565757415076147L;
 
     MonKitException() {
-	super();
+        super();
     }
 
     MonKitException(String s) {
-	super(s);
+        super(s);
     }
 }

@@ -10,27 +10,28 @@ public class MonKitObservation {
     private String value;
     
     public MonKitObservation( String name, String value ) {
-	this.setName(name);
-	this.setValue(value);
+        this.name = name;
+        this.value = value;
     }
 
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     public String getName() {
-	return name;
+        return name;
     }
 
     public void setValue(String value) {
-	this.value = value;
+        this.value = value;
     }
 
     public String getValue() {
-	return value;
+        return value;
     }
-
+    
+    @Override
     public String toString() {
-	return "Name: " + name + ", value: " + value;
+        return "Name: " + name + ", value: " + value;
     }
 }

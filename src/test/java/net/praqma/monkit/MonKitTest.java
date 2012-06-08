@@ -69,4 +69,24 @@ public class MonKitTest {
 	
     }
     
+    @Test
+    public void testAllCategoriesEmpty() throws MonKitException {
+        MonKit mk1 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">7</observation><observation name=\"name2\">10</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
+        MonKit mk2 = MonKit.fromString("<categories><category name=\"category\" scale=\"scale\"><observation name=\"name1\">8</observation><observation name=\"name4\">11</observation></category><category name=\"category2\" scale=\"scale2\"/></categories>" );
+        MonKit mk3 = MonKit.fromString("<categories><category name=\"category2\" scale=\"scale\"><observation name=\"name44\">9</observation><observation name=\"name22222\">12</observation></category></categories>" );
+	
+        MonKit mk = MonKit.merge(mk1,mk2, mk3);
+        
+        assertFalse(mk.isAllCategoriesEmpty());
+        
+        MonKit empty = new MonKit();
+        empty.add(new MonKitCategory("Scale", "Megabytes"));
+        
+        assertTrue(empty.isAllCategoriesEmpty());
+        
+        MonKit emptyNoCats = new MonKit();
+        assertTrue(emptyNoCats.isAllCategoriesEmpty());
+        
+    }
+    
 }
