@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.praqma</groupId>
     <artifactId>monkit</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>MonKit</name>
     <url>https://github.com/Praqma/MonKit</url>
     <description>MonKit API package</description>
@@ -100,11 +100,11 @@
                     </execution>
                 </executions>
             </plugin>
-            
         </plugins>
     </build>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
